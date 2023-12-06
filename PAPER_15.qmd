@@ -1,0 +1,410 @@
+---
+title: "The Cascading Effects of Drug Legalization: Evidence from U.S. Border Counties"
+bibliography: references.bib
+fig-pos: H
+nocite: |
+  @*
+author:
+  - name: \textbf{Dili Maduabum}\footnote{Yale University. I thank Sylvia Klosin, Anna Stansbury, and Brittany Street for their useful comments and suggestions.}
+    firstname: Dili
+    surname: Maduabum
+    email: dili.maduabum@yale.eddu
+    affiliation: Yale University
+acknowledgements: |
+  Acknowledgements
+date: today
+date-format: "MMMM YYYY" 
+classoption: abstract #to have an abstract
+link-citations: true
+linkcolor: Maroon
+#title-fontsize: 6pt
+urlcolor: Maroon
+output:
+  pdf_document: default
+number-sections: true #number heading
+editor_options: 
+  chunk_output_type: console
+format:
+    #  - left=25mm,
+    #  - right = 25mm,
+    #  - top=30mm,
+    # - bottom = 30mm
+  pdf: 
+      #margin = 1.2 in
+    margin-left: 1in
+    margin-right: 1in
+    margin-bottom: 1in
+    margin-top: 1in
+    documentclass: article #make it latex
+    #geometry:
+    toc: false
+    colorlinks: true 
+    papersize: letter
+    include-in-header:  
+      - text: |
+          \usepackage{amsfonts}
+          \usepackage{amsmath}
+          \usepackage{bbm}
+          \usepackage[textfont={footnotesize},labelfont={bf,footnotesize}]{caption}
+          \usepackage{setspace}
+abstract-title: plain
+fontsize: 12pt
+#fig-pos: 'tbp'
+#tbl-pos: 'tbp'
+abstract: |
+   \noindent\onehalfspacing In this paper, I use the difference-in-difference estimator to determine the causal effects of bordering a state that has legalized either medical or recreational marijuana. I look at three different outcomes: possession of marijuana, hard drugs, and driving under the influence of alcohol (DUI). The outcomes are proxies for marijuana use, hard drug use, and substitution possibilities between alcohol and marijuana. Using a novel dataset and the FBI's UCR panel data from 1990–2020, I find that within non-legal states, counties that border legal states had about 22 additional hard drug possession cases. I found no evidence of an increase in marijuana consumption or a decrease in alcohol consumption.
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      out.extra = "")  # This forces knitr to label all figures.
+```
+
+{{< pagebreak >}}
+
+\doublespacing
+
+# Introduction {#sec1}
+
+In 1996, California made history as the first state to legalize medical
+marijuana. By 2012, Colorado and Washington State led the way in
+recreational marijuana legalization. As of 2023, 38 states and D.C. have
+adopted medical marijuana laws (MMLs), and 21 states plus D.C. have
+enacted recreational marijuana laws (RMLs). Advocates for further
+legalization say it has the potential to mitigate racial disparities in
+arrests, particularly given that minorities are disproportionately
+affected by marijuana-related arrests [@edwards-2020]. Some also argue
+that the legalization could induce individuals using substances like
+alcohol to shift their preference towards marijuana [@bachhuber-2014;
+@powell-2018].
+
+The ongoing discourse on legalization also faces staunch opposition,
+with the opposing side highlighting the potential dangers to society.
+Critics argue that legalization may serve as an incentive for non-users
+to turn to marijuana due to increased accessibility [@groce-2018]. A
+major concern is also that marijuana's addictive nature could
+potentially pave the way for the consumption of harder drugs like
+cocaine, meth, and heroin. Critics additionally express concerns about
+the spillover effect of medical marijuana laws (MMLs) or recreational
+marijuana laws (RMLs) into jurisdictions without such laws, potentially
+exporting some of the associated consequences across borders. For the
+sake of brevity, I use the term "states with any marijuana law" (AML) or
+"states with AMLs" to collectively refer to states that have adopted
+either RMLs or MMLs.
+
+In this study, I investigate the impact of bordering a state with any
+marijuana law (AML) after the adoption of AML in that state in order to
+comprehensively address concerns and assertions from both sides. I look
+at various outcomes, including direct crimes such as marijuana
+possession as well as indirect or "consequential" crimes like possession
+of hard drugs and driving under the influence of alcohol (DUI). The
+reason being that people in counties that border AML states could easily
+have access to marijuana by crossing their state border, so they should
+experience similar effects as though they were in the AML state.
+Leveraging a novel county-level dataset from 1990 to 2020 from different
+sources, including the Uniform Crime Reports and the US Census Bureau, I
+implement a robust difference-in-differences identification strategy.
+This method carefully controls for county-linear time trends, with
+standard errors clustered at the county level, thereby mitigating
+concerns related to county-level confounding. From the standpoint of the
+supporters, one would anticipate a decline in DUIs due to the suggested
+"shift" from alcohol to marijuana. Conversely, from the perspective of
+opponents, an increase in marijuana possession crimes (used as a proxy
+for marijuana use) and hard drug crimes (used as a proxy for hard drug
+use) might be expected.
+
+Ultimately, I find that counties bordering states with any marijuana law
+experienced an increase of approximately 22 possession of hard drugs
+arrests following the enactment of either of the marijuana laws. I found
+no conclusive evidence suggesting that bordering a state that has
+legalized any marijuana law (AML) had any significant impact on
+marijuana crimes (indicative of marijuana use) or DUIs (shifting from
+alcohol to marijuana). This research contributes to the growing
+literature on the spillover effects of recreational and medical drug
+legalization. To my knowledge, this is the first study to
+comprehensively examine the bordering counties of all states that have
+not legalized any type of marijuana law to investigate potential
+spillovers. Most studies usually focus on a subset of states at the
+time.
+
+The rest of the paper proceeds as follows: Section 1.1 summarizes the
+existing literature on the effects of both medical and recreational
+marijuana legalization. Section 2 describes the data sources, how the
+data was constructed, and the variables used in the study. Section 3
+shows the identification strategy used and the results found, while
+Section 4 presents the possible extensions of this study, further
+limitations, and concluding remarks.
+
+## Marijuana Laws, Marijuana and Hard Drug Use, and DUIs {#sec11}
+
+Earlier studies have generally found no link between marijuana use and
+MMLs. State variation in marijuana use was usually attributed to
+state-specific usage before any law was passed [@cerda-2012]. More
+recent studies that account for state and time differences reach
+conflicting conclusions, with some citing no effect
+[@lynne-landsman-2013], while others find increases [@kelly-2014], and
+decreases [@harper-2012]. There are fewer studies that assess the effect
+of RMLs on marijuana use, simply because the adoption of RMLs came
+relatively sometime after the adoption of MMLs. Studies have found that
+states with RMLs tend to prescribe fewer opioid medications [@wen-2018]
+and have fewer deaths involving opioid prescriptions [@shover-2019].
+Numerous studies do indeed emphasize the correlation between
+recreational drug legalization and increased usage of harder substances
+[@olfson-2018; @wong-2019; @bleyer-2018].
+
+As for the effects on DUIs, literature has largely found a negative
+association between medical marijuana laws (MMLs) and DUIs
+[@anderson-2013; @santaella-tenorio-2017], though some studies report a
+significant increase in driving under the influence of marijuana in MML
+states [see @fink-2020]. There is conflicting literature regarding the
+effects of recreational marijuana laws (RMLs) on dui cases. For example,
+@lane-2019 showed that recreational cannabis sales in Colorado and
+Washington were associated with an increase and then a decrease in
+traffic fatalities involving alcohol, yet @santaella-tenorio-2017
+reported only a slight increase in traffic fatalities in Colorado, with
+Washington showing no effect at all. The handful of studies that
+explored the impact of RMLs on alcohol use mostly found that enacting an
+RML led to a decrease in binge drinking and a decline in alcohol sales
+[@dragone-2019; @miller-2021].
+
+While there is an array of medical studies that examine and consequently
+find substitution possibilities between alcohol and marijuana use [see
+@lucas-2020], very few studies examine the switch from alcohol to
+marijuana as a result of when legalization policies occur. Former
+alcohol users who use marijuana as a result of policy changes differ
+from those who would have substituted to marijuana usage regardless of
+any policy change. Thus, inferences cannot be drawn from studies that do
+not take policy legalization into account. Studies that look at
+substitution policies within the context of policy enactment find
+conflicting results [see @pacula-2022].
+
+Relatively few studies analyze the effect of legalization on neighboring
+states. Most studies look at the spillover effects of other
+region-specific policies on surrounding areas, like gun laws
+[@knight-2013]; minimum drinking age laws [@figlio-1995]; and cigarette
+pricing laws [@lovenheim-2008]. The paper most similar to mine is by
+@hao-2017, which examined the spillover effects of recreational
+marijuana legalization in Colorado and Washington on neighboring states
+using a difference-in-differences estimator. They found an increase in
+marijuana possession arrests and marijuana usage in counties that border
+states that have legalized marijuana. They found no impact on DUI or
+hard drug arrests.
+
+# Data
+
+In order to capture where and when border counties were "exposed" to
+recreational or medical marijuana laws from their adjacent counties, I
+constructed a novel dataset using data from the US Census Bureau, public
+records, and the FBI's Uniform Crime Reports (UCR). The initial step
+involved obtaining data on counties that share borders in all 50 states
+from the US Census Bureau. Subsequently, I refined this dataset to
+include only counties that share borders with counties in different
+states. Within this subset, I further identified border counties located
+next to states that had legalized medical or recreational marijuana. I manually collected data on legalized states and the respective
+years these laws were enacted, using information available in public
+records. All non-legal states share a border with a state that has
+legalized some form of marijuana law. @fig-1_border_map visualizes this.
+This study exclusively focuses on states where marijuana is not
+currently legalized. Furthermore, any state that legalized marijuana
+after the year 2020 is still categorized as non-legalized within the
+scope of this study.
+
+![Treated, Control, and Excluded
+Counties](images/summary_treated_graph.png){#fig-1_border_map
+fig-align="center" width="89%"}
+
+I then collected data from the FBI's Uniform Crime Reports (UCR), which tracks the number of different crimes in each state and county from 1974 to 2020. Specifically, I used the total number of arrests for marijuana possession, hard drug possession, and driving under the influence from 1990 to 2020. My first dependent variable of interest is "direct" crimes, like the possession of marijuana cases, which is a proxy for marijuana use. With legalization comes increased access to marijuana, so one can expect possession of marijuana crimes to go down within the state that legalized it^[Even in states where marijuana is legalized, individuals can face arrest for possession or sale. In recreational states, selling without a license is prohibited, and in medical states, possessing marijuana without a doctor's prescription is illegal.]. I, on the other hand, look at this variable to determine if the increased access or "use" made its way into counties that have not legalized it. If it did, then one can expect marijuana possession cases to go up within those counties.
+
+My second and third variables of interest are "indirect" crimes, which
+include hard drug possession, which is a proxy for drug use, and driving
+under the influence (DUI), which is a proxy for switching to marijuana
+from alcohol. The rationale here is that with more potential access to
+marijuana from border counties, a subsequent demand for more addictive
+drugs (like hard drugs) should follow, thus increasing the possession of
+hard drug crimes (opposing view). Despite the potential for an
+alternative scenario, where legalization of marijuana would result in
+substituting away from illegal hard drugs towards marijuana, the
+hypothesis of this study leans towards the former perspective. The
+objective is to examine whether the claims of those opposing further
+legalization hold true. I use the indirect crime of DUIs to test the
+claims of those in favor of further legalization. If substitution
+effects exist between alcohol and marijuana, bordering counties, with
+easier access to marijuana, should experience fewer DUI cases as
+individuals would consume more marijuana in place of alcohol.
+
+My independent variable of interest is a dummy variable takes a value of
+1 if a county within a non-legalized state shares a border with a state
+that has legalized either medical or recreational marijuana. If the
+county in a non-legalized state does not border a legalized state, the
+dummy variable takes a value of 0. A border county can be under the
+control group if it does not border a legalized state. If a county borders
+multiple legalized states, only the state that legalized marijuana
+earliest is considered. Counties bordering both legalized and non-legalized states are included in the treatment group. For states that have legalized
+both medical and recreational marijuana, the year selected for the
+analysis is based on the larger of the two years. For example, if a
+state adopted medical marijuana laws (MMLs) in 2012 and recreational
+marijuana laws (RMLs) in 2019, the selected year for analysis is 2019.
+This is done to capture more of the recreational legalization effect,
+since RMLs are adopted in the years following an MML adoption.^[All states that have legalized recreational adopted medical first] The
+reasoning for this is that states with RMLs generally provide greater
+access to marijuana compared to states with MMLs, where a doctor's
+prescription is required.
+
+# Empirical Analysis and Results {#sec2}
+
+## Identification Strategy {#sec3}
+
+To distinguish the effect of marijuana legalization from confounding
+factors, I exploit the within-state variation induced by the fact that
+38 states enacted MMLs between 1990 and 2020 and 21 enacted RMLs passed
+the law during that same time period. More specifically, I used a
+difference-in-differences research design to ask whether outcomes change
+more in counties that border legalized states than in counties that do not. My
+main specification is summarized in the following regression equation:
+
+$$Y^j_{it} = \delta\mathbbm{1}{(Border * AML_{it})} + \alpha_i + \gamma_t + \lambda_i * t + \epsilon_{it}$$ {#eq-1}
+
+<!-- $$Y^j_{it} = \delta\mathbbm{1}{(Border * AML)}_{it} + \gamma_i + \alpha_t + \beta_i * t + \epsilon_{it}$$ {#eq-1} -->
+where $j$ represents a set of outcomes, including the number of cases of
+marijuana possession, possession of hard drugs, and driving under the
+influence of alcohol. $Y^j_{it}$ is the outcome $j$ for county
+$i$ in year $t$. $\alpha_i$ captures county fixed effects, while
+$\gamma_t$ captures year-fixed effects. $\lambda_i * t$ flexibility
+controls for county-specific linear time trends whereas $\epsilon_{it}$ is a stochastic error term. The $\mathbbm{1}{(Border * AML_{it})}$ term is an indicator
+that is equal to 1 when county $i$ borders a state that adopted
+any marijuana law (AML) in year $t$. It takes the value of 0 otherwise, and $\delta$ is our
+variable of interest. If the pre-trends assumption holds, then
+$\delta$ captures the average treatment effect on the treated (ATT) of
+bordering a state with AML. Standard errors are clustered at the county level.
+
+## Event Study Design
+
+To ensure that @eq-1 effectively captures the average treatment effect
+on the treated (ATT), the parallel trends assumption must hold. This
+assumption suggests that, counties that border other counties which
+never adopt AML are on the same trend in terms of their DUIs, marijuana
+offenses, and hard drug offenses, as counties that border other counties
+which did adopt AML. In essence, this assumption requires that the
+outcomes in these two groups of counties were comparable before the
+neighboring state implemented AML. However, it is plausible that even
+after accounting for county-by-year fixed effects in @eq-1, treated
+counties may have followed a distinct outcome trajectory compared to the
+non-treated counties before the bordering state adopted AML. I test this
+by examining whether trajectories prior to the AML adoption were
+parallel. To do this, I use the following event-study model:
+
+$$Y^j_{it} = \sum^{k = 5}_{k=-5; k \neq -1}\theta_k\mathbbm{1}{(Border * AML_{i,t+k})} + \alpha_i + \gamma_t + \lambda_i * t + \epsilon_{it}$$ {#eq-event}
+
+
+In this model, $\mathbbm{1}{(Border * AML_{i,t+k})}$ is a series of lags and leads for the years before
+and after a border state adopts AML. Periods before the legalization are
+the pre-trends, with the parameters of interest being $\theta_k$ for
+$k < 0$. If the estimates on those parameters are close to zero, this
+suggests trajectories in counties that border an AML state were similar
+to untreated counties prior to when the AML was adopted.
+
+## Results {#sec-rec}
+
+Table 1 shows the results of a difference-in-differences estimate of
+@eq-1. Columns 1 and 2 look at the direct effect, which is marijuana
+possession. Column (1) reports a negative coefficient, but when I allow
+for counties to follow their own trends, as in Column (2), the
+coefficient becomes positive. This suggests that controlling for county
+time trends mitigates some omitted variables. Ultimately, I find no
+evidence of an effect on the possession of marijuana. Columns 3--6 look
+at the indirect effects, which are possession of hard drugs and driving
+under the influence arrests. Column (4) shows that when controlling for
+country-time trends, on average, counties that border AML states had 22
+additional possession of hard drug cases. This result is statistically
+significant at the 0.1 level. Columns 5--6 report positive coefficients
+with DUI as the dependent variable, though they are not statistically
+insignificant, and thus I cannot make valid inferences.
+
+```{=latex}
+\begin{table}[h]
+\begin{center}
+\textbf{Table 1}: The Direct and Indirect Effects of Bordering an AML State\\
+\end{center}
+\onehalfspacing
+\input{~/Library/Mobile Documents/com~apple~CloudDocs/WRITING SAMPLE/border_treated/Paper/ident.tex}
+\end{table}
+```
+@fig-weed, @fig-hard, and @fig-dui visualize @eq-event for our outcomes
+of interest. The leads in all our models were not statistically
+different from 0, which means that there's no evidence that trends in
+direct or indirect outcomes were different between treated and untreated
+counties before the bordering state enacted any marijuana law. During
+the treatment year, there was a statistically significant increase in
+the possession of marijuana crimes. This may be due to the fact that
+people in counties that border AML states could easily have access to
+marijuana by crossing their state border, but the effect is short-lived.
+Similarly, for hard drug possession crimes, @eq-event estimates a jump
+on the treatment year and no statistically significant differences in
+the years after. There is a statistically significant decrease in DUI
+cases for border counties in the year after it was treated, which falls
+in line with the theory that people substitute marijuana for alcohol,
+which consequently leads to a decrease in DUIs. Again, this effect seems
+to be temporary.
+
+```{=html}
+<!--::: {layout="[[1,1], [1]]"} Possession of Marijuana Possession of Hard Drugs Driving Under the Influence
+{layout-nrow="1"}-->
+```
+::: {layout-nrow="1"}
+![Marijuana](images/event_weed.png){#fig-weed height="74%"}
+
+![Hard Drugs](images/event_hardDrug.png){#fig-hard height="74%"}
+:::
+
+![DUIs](images/event_dui.png){#fig-dui width="60%"}
+
+<!--:::-->
+
+# Conclusion
+
+In this study, I investigated the impact of bordering a state that has
+legalized recreational or medical marijuana within states that did not
+adopt any form of marijuana law (AML). Within non-legalized states, I
+used counties that directly border AML states as my treatment group and
+counties that do not border a state with AML as my control group. Using
+a difference-in-differences design, I found that counties that border
+AML states had an increase in the total number of hard drug crimes by 22
+cases. I found no evidence of an effect on possession of marijuana or
+DUI cases.
+
+To my knowledge, this is the first study to estimate the effect of both
+recreational and medical marijuana within a state on the counties
+closest to them using within-state variation of when the laws were
+passed. Furthermore, the existing literature is prone to bias from
+confounding trends at the county level. In my approach, I use
+county-by-year fixed effects to flexibly control for unobserved
+time-varying effects that differ by county to eliminate bias. This study
+also uses all non-legalized states and spans a longer period of time
+than past studies.
+
+There are, however, limits to my study design. First, the outcome data
+lists arrests by county and not individual; thus, there is the
+possibility of repeat offenders and double counting, which could lead to
+overestimated results. I do not include control variables because of a
+lack of data availability, but it's possible that controlling for
+population or other covariates could decrease or increase my magnitude.
+This paper also ignores the fact that police in counties that border
+legalized states may be more or less active in making marijuana-related
+arrests after the law is passed because they anticipate a higher level
+of marijuana in circulation. Thus, I recommend future studies account
+for this by including additional controls. Further analysis may also
+look at various forms of treatment, i.e., non-AML counties that border
+only recreational states or counties within states that have legalized
+medical marijuana that border states that have legalized recreational
+marijuana.
+
+```{=tex}
+\newpage
+\onehalfspacing
+\section*{References}
+```
+::: {#refs}
+:::
